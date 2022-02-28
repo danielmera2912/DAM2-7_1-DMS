@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 
 fun main() = Window(size = IntSize(800, 900), title = "Asteroids for Desktop") {
     val game = remember { Game() }
+    var gameObjects = mutableStateListOf<GameObject>()
     val density = LocalDensity.current
     LaunchedEffect(Unit) {
         while (true) {
@@ -32,11 +34,31 @@ fun main() = Window(size = IntSize(800, 900), title = "Asteroids for Desktop") {
     Column(modifier = Modifier.background(Color(51, 153, 255)).fillMaxHeight()) {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Button({
-                game.startGame()
+                game.startGame(1)
             }) {
-                Text("Play")
+                Text("Easy")
             }
+            Button({
+                game.startGame(2)
+            }) {
+                Text("Normal")
+            }
+            Button({
+                game.startGame(3)
+            }) {
+                Text("Hard")
+            }
+            Button({
+                game.startGame(4)
+            }) {
+                Text("Legendary")
+            }
+
+        }
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(game.gameStatus, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
+            Text("Death Counter: "+game.contador, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
+            //Text("Score: "+game.contador, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
         }
         Box(modifier = Modifier
             .aspectRatio(1.0f)
@@ -72,5 +94,6 @@ fun main() = Window(size = IntSize(800, 900), title = "Asteroids for Desktop") {
                 }
             }
         }
+
     }
 }

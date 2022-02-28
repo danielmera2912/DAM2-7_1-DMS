@@ -17,17 +17,19 @@ fun Vector2.angle(): Double {
     return (rawAngle / Math.PI) * 180
 }
 
-class Game {
+class Game(): ResultadoEN() {
     var prevTime = 0L
     val ship = ShipData()
-
+    var dificultad= 0
     var targetLocation by mutableStateOf<DpOffset>(DpOffset.Zero)
 
     var gameObjects = mutableStateListOf<GameObject>()
     var gameState by mutableStateOf(GameState.RUNNING)
-    var gameStatus by mutableStateOf("Let's play!")
-
-    fun startGame() {
+    var gameStatus by mutableStateOf(jugar)
+    var contador = 0
+    var contador2 = 0
+    fun startGame(dificultad: Int) {
+        this.dificultad = dificultad
         gameObjects.clear()
         ship.position = Vector2(width.value / 2.0, height.value / 2.0)
         ship.movementVector = Vector2.ZERO
@@ -38,7 +40,7 @@ class Game {
             })
         }
         gameState = GameState.RUNNING
-        gameStatus = "Good luck!"
+        gameStatus =suerte
     }
 
     fun update(time: Long) {
@@ -56,14 +58,26 @@ class Game {
         ship.movementVector = ship.movementVector + (shipToCursor.normalized * floatDelta.toDouble())
 
         for (gameObject in gameObjects) {
-            gameObject.update(floatDelta, this)
+            if(dificultad==1){
+                gameObject.update(floatDelta, this)
+            }
+            else if (dificultad==2){
+                gameObject.update2(floatDelta, this)
+            }
+            else if (dificultad==3){
+                gameObject.update3(floatDelta, this)
+            }
+            else{
+                gameObject.update4(floatDelta, this)
+            }
+
         }
 
 
         val bullets = gameObjects.filterIsInstance<BulletData>()
 
         // Limit number of bullets at the same time
-        if (bullets.count() > 3) {
+        if (bullets.count() > 9) {
             gameObjects.remove(bullets.first())
         }
         val asteroids = gameObjects.filterIsInstance<AsteroidData>()
@@ -101,12 +115,14 @@ class Game {
     fun endGame() {
         gameObjects.remove(ship)
         gameState = GameState.STOPPED
-        gameStatus = "Better luck next time!"
+        gameStatus = fracaso
+        contador++
     }
 
     fun winGame() {
+        contador2++
         gameState = GameState.STOPPED
-        gameStatus = "Congratulations!"
+        gameStatus = victoria
     }
 
     var width by mutableStateOf(0.dp)
