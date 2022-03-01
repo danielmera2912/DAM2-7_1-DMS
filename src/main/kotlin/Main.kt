@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 fun main() = Window(size = IntSize(800, 900), title = "Asteroids for Desktop") {
-    val game = remember { Game() }
+    val esp = ResultadoESP()
+    val en = ResultadoEN()
+    var game = remember { Game(en) }
+
     var gameObjects = mutableStateListOf<GameObject>()
     val density = LocalDensity.current
     LaunchedEffect(Unit) {
@@ -36,29 +39,44 @@ fun main() = Window(size = IntSize(800, 900), title = "Asteroids for Desktop") {
             Button({
                 game.startGame(1)
             }) {
-                Text("Easy")
+                Text(game.idioma.d1)
             }
             Button({
                 game.startGame(2)
             }) {
-                Text("Normal")
+                Text(game.idioma.d2)
             }
             Button({
                 game.startGame(3)
             }) {
-                Text("Hard")
+                Text(game.idioma.d3)
             }
             Button({
                 game.startGame(4)
             }) {
-                Text("Legendary")
+                Text(game.idioma.d4)
             }
 
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text(game.gameStatus, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
-            Text("Death Counter: "+game.contador, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
+            Text(game.idioma.cont+": "+game.contador, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
             //Text("Score: "+game.contador, modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 16.dp), color = Color.White)
+        }
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Button({
+                game.changeIdioma(esp)
+                game.startGame(2)
+            }) {
+                Text(game.idioma.i1)
+            }
+            Button({
+                game.changeIdioma(en)
+                game.startGame(2)
+            }) {
+                Text(game.idioma.i2)
+            }
+
         }
         Box(modifier = Modifier
             .aspectRatio(1.0f)

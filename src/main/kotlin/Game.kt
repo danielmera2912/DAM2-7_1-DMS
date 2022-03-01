@@ -17,7 +17,7 @@ fun Vector2.angle(): Double {
     return (rawAngle / Math.PI) * 180
 }
 
-class Game(): ResultadoEN() {
+class Game(var idioma: Resultado){
     var prevTime = 0L
     val ship = ShipData()
     var dificultad= 0
@@ -25,9 +25,12 @@ class Game(): ResultadoEN() {
 
     var gameObjects = mutableStateListOf<GameObject>()
     var gameState by mutableStateOf(GameState.RUNNING)
-    var gameStatus by mutableStateOf(jugar)
+    var gameStatus by mutableStateOf(idioma.jugar)
     var contador = 0
     var contador2 = 0
+    fun changeIdioma(idioma: Resultado){
+        this.idioma= idioma
+    }
     fun startGame(dificultad: Int) {
         this.dificultad = dificultad
         gameObjects.clear()
@@ -40,7 +43,7 @@ class Game(): ResultadoEN() {
             })
         }
         gameState = GameState.RUNNING
-        gameStatus =suerte
+        gameStatus =idioma.suerte
     }
 
     fun update(time: Long) {
@@ -115,14 +118,14 @@ class Game(): ResultadoEN() {
     fun endGame() {
         gameObjects.remove(ship)
         gameState = GameState.STOPPED
-        gameStatus = fracaso
+        gameStatus = idioma.fracaso
         contador++
     }
 
     fun winGame() {
         contador2++
         gameState = GameState.STOPPED
-        gameStatus = victoria
+        gameStatus = idioma.victoria
     }
 
     var width by mutableStateOf(0.dp)
